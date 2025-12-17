@@ -22,7 +22,7 @@ function App() {
   const [shareEmail, setShareEmail] = useState('');
 
   // Railway backend URL
-  const API_URL = 'file-sharing-app-production-90b7.up.railway.app';
+  const API_URL = 'file-sharing-app-production-6ea2.up.railway.app';
 
   // check if already logged in
   useEffect(() => {
