@@ -130,6 +130,11 @@ app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.send("Backend is running");
+});
+
+
 // Get my files
 app.get('/myfiles', checkAuth, (req, res) => {
   const sql = 'SELECT * FROM files WHERE owner = ?';
