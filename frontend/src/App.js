@@ -22,7 +22,7 @@ function App() {
   const [shareEmail, setShareEmail] = useState('');
 
   // Railway backend URL
-  const API_URL = 'https://file-sharing-app-production-6ea2.up.railway.app/';
+  const API_URL = 'https://file-sharing-app-production-6ea2.up.railway.app';
 
   // check if already logged in
   useEffect(() => {
@@ -45,7 +45,7 @@ function App() {
   // register function
   const handleRegister = async () => {
     try {
-      const response = await fetch('${API_URL}/register', {
+      const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
@@ -69,7 +69,7 @@ function App() {
   // login function
   const handleLogin = async () => {
     try {
-      const response = await fetch('${API_URL}/login', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -92,20 +92,20 @@ function App() {
 
   // logout
   const handleLogout = () => {
-  setLoggedIn(false);
-  setToken('');
-  setUser(null);
-  setName('');
-  setEmail('');
-  setPassword('');
-  localStorage.clear();
-};
+    setLoggedIn(false);
+    setToken('');
+    setUser(null);
+    setName('');
+    setEmail('');
+    setPassword('');
+    localStorage.clear();
+  };
 
   // get files
   const getFiles = async () => {
     try {
-      const response = await fetch('${API_URL}/myfiles', {
-        headers: { 'auth': token }
+      const response = await fetch(`${API_URL}/myfiles`, {
+        headers: { auth: token }
       });
       const data = await response.json();
       if (!data.error) {
@@ -127,9 +127,9 @@ function App() {
     formData.append('file', selectedFile);
 
     try {
-      const response = await fetch('${API_URL}/upload', {
+      const response = await fetch(`${API_URL}/upload`, {
         method: 'POST',
-        headers: { 'auth': token },
+        headers: { auth: token },
         body: formData
       });
       const data = await response.json();
@@ -149,10 +149,10 @@ function App() {
   // share with user
   const handleShare = async () => {
     try {
-      const response = await fetch('${API_URL}/share', {
+      const response = await fetch(`${API_URL}/share`, {
         method: 'POST',
         headers: {
-          'auth': token,
+          auth: token,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ fileId: shareFileId, email: shareEmail })
@@ -174,10 +174,10 @@ function App() {
   // get share link
   const getLink = async (fileId) => {
     try {
-      const response = await fetch('${API_URL}/create-link', {
+      const response = await fetch(`${API_URL}/create-link`, {
         method: 'POST',
         headers: {
-          'auth': token,
+          auth: token,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ fileId })
@@ -188,7 +188,6 @@ function App() {
         alert(data.error);
       } else {
         alert('Share link: ' + data.link);
-        // TODO: copy to clipboard feature
       }
     } catch (err) {
       alert('Failed to create link');
@@ -196,29 +195,28 @@ function App() {
   };
 
   // download file
-  // Replace old downloadFile function with this:
-const downloadFile = async (fileId, fileName) => {
-  try {
-    const response = await fetch(`${API_URL}/download/${fileId}`, {
-      headers: { 'auth': token }
-    });
-    
-    if (response.ok) {
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    } else {
-      alert('Download failed');
+  const downloadFile = async (fileId, fileName) => {
+    try {
+      const response = await fetch(`${API_URL}/download/${fileId}`, {
+        headers: { auth: token }
+      });
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } else {
+        alert('Download failed');
+      }
+    } catch (err) {
+      alert('Download error');
     }
-  } catch (err) {
-    alert('Download error');
-  }
-};
+  };
 
   // if not logged in show login/register
   if (!loggedIn) {
@@ -230,48 +228,19 @@ const downloadFile = async (fileId, fileName) => {
           {showRegister ? (
             <div>
               <h2>Register</h2>
-              <input 
-                type="text" 
-                placeholder="Name" 
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <input 
-                type="email" 
-                placeholder="Email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input 
-                type="password" 
-                placeholder="Password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+              <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
               <button onClick={handleRegister}>Register</button>
-              <p onClick={() => setShowRegister(false)}>
-                Already have account? Login
-              </p>
+              <p onClick={() => setShowRegister(false)}>Already have account? Login</p>
             </div>
           ) : (
             <div>
               <h2>Login</h2>
-              <input 
-                type="email" 
-                placeholder="Email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input 
-                type="password" 
-                placeholder="Password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
               <button onClick={handleLogin}>Login</button>
-              <p onClick={() => setShowRegister(true)}>
-                Don't have account? Register
-              </p>
+              <p onClick={() => setShowRegister(true)}>Don't have account? Register</p>
             </div>
           )}
         </div>
@@ -292,10 +261,7 @@ const downloadFile = async (fileId, fileName) => {
 
       <div className="upload-box">
         <h3>Upload File</h3>
-        <input 
-          type="file" 
-          onChange={(e) => setSelectedFile(e.target.files[0])}
-        />
+        <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} />
         <button onClick={handleUpload}>Upload</button>
       </div>
 
@@ -322,15 +288,9 @@ const downloadFile = async (fileId, fileName) => {
                   <td>{file.type}</td>
                   <td>{new Date(file.uploaded).toLocaleDateString()}</td>
                   <td>
-                    <button onClick={() => downloadFile(file.id, file.original_name)}>
-                      Download
-                    </button>
-                    <button onClick={() => setShareFileId(file.id)}>
-                      Share
-                    </button>
-                    <button onClick={() => getLink(file.id)}>
-                      Get Link
-                    </button>
+                    <button onClick={() => downloadFile(file.id, file.original_name)}>Download</button>
+                    <button onClick={() => setShareFileId(file.id)}>Share</button>
+                    <button onClick={() => getLink(file.id)}>Get Link</button>
                   </td>
                 </tr>
               ))}
@@ -339,17 +299,11 @@ const downloadFile = async (fileId, fileName) => {
         )}
       </div>
 
-      {/* share modal */}
       {shareFileId && (
         <div className="modal">
           <div className="modal-box">
             <h3>Share File</h3>
-            <input 
-              type="email" 
-              placeholder="Enter user email"
-              value={shareEmail}
-              onChange={(e) => setShareEmail(e.target.value)}
-            />
+            <input type="email" placeholder="Enter user email" value={shareEmail} onChange={(e) => setShareEmail(e.target.value)} />
             <button onClick={handleShare}>Share</button>
             <button onClick={() => setShareFileId(null)}>Cancel</button>
           </div>
