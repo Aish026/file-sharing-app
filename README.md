@@ -1,7 +1,7 @@
 # File Sharing Application
 
 ## Live Demo
-- **Frontend**: file-sharing-app-vercel-4mvsq1wzz-aishwaryas-projects-17e9f2a0.vercel.app
+- **Frontend**: file-sharing-app-vercel-one.vercel.app
 - **Backend API**: https://file-sharing-app-production-6ea2.up.railway.app/
 
 ## GitHub Repository
