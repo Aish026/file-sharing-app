@@ -8,8 +8,13 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 app.use(cors());
-app.options('*', cors());
 app.use(express.json());
 app.use('/files', express.static('uploads'));
 
@@ -21,7 +26,6 @@ const db = mysql.createConnection({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME
 });
-
 
 db.connect((err) => {
   if (err) {
@@ -71,14 +75,12 @@ function checkAuth(req, res, next) {
 // Register
 app.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
-  
-  // hash password
+
   if (!name || !email || !password) {
-  return res.json({ error: 'All fields required' });
-}
+    return res.json({ error: 'All fields required' });
+  }
 
-const hash = await bcrypt.hash(password, 10);
-
+  const hash = await bcrypt.hash(password, 10);
   
   const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
   db.query(sql, [name, email, hash], (err, result) => {
@@ -141,7 +143,6 @@ app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
 app.get("/", (req, res) => {
   res.send("Backend is running");
 });
-
 
 // Get my files
 app.get('/myfiles', checkAuth, (req, res) => {
@@ -255,4 +256,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
