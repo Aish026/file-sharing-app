@@ -195,7 +195,7 @@ app.post('/create-link', checkAuth, (req, res) => {
       if (err) {
         return res.json({ error: 'Failed to create link' });
       }
-      res.json({ link: `http://localhost:5000/shared/${link}` });
+      res.json({ link: `https://file-sharing-app-production-6ea2.up.railway.app/shared/${link}` });
     });
   });
 });
@@ -243,7 +243,7 @@ app.get('/shared/:link', checkAuth, (req, res) => {
   });
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
