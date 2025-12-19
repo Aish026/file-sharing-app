@@ -15,7 +15,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(cors({
-  origin: 'https://file-sharing-app-deploy.vercel.app',
+  origin: true,
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'auth']
 }));
