@@ -36,6 +36,22 @@ db.connect((err) => {
     console.log('DB connection failed', err);
   } else {
     console.log('Connected to database');
+    
+    // Create tables
+    db.query('CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100), email VARCHAR(100) UNIQUE, password VARCHAR(255))', (err) => {
+      if (err) console.log('Users table error:', err);
+      else console.log('Users table ready');
+    });
+    
+    db.query('CREATE TABLE IF NOT EXISTS files (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), original_name VARCHAR(255), size INT, type VARCHAR(50), owner INT, uploaded TIMESTAMP DEFAULT CURRENT_TIMESTAMP)', (err) => {
+      if (err) console.log('Files table error:', err);
+      else console.log('Files table ready');
+    });
+    
+    db.query('CREATE TABLE IF NOT EXISTS shares (id INT PRIMARY KEY AUTO_INCREMENT, file_id INT, shared_with INT, link VARCHAR(255))', (err) => {
+      if (err) console.log('Shares table error:', err);
+      else console.log('Shares table ready');
+    });
   }
 });
 
