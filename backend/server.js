@@ -6,15 +6,7 @@ const jwt = require('jsonwebtoken');
 const mysql = require('mysql2');
 const path = require('path');
 const fs = require('fs');
-
 const app = express();
-app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
-
 app.use(cors({
   origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
